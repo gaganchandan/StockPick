@@ -1,0 +1,5 @@
+build
+dist
+stockpick.egg-info
+__pycache__
+note.txt
