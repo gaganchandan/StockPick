@@ -37,8 +37,9 @@ strategy = importlib.import_module(os.path.join(
 for symbol in args.symbols:
     # Check if the data has already been downloaded. If not, download it.
     try:
-        os.path.exists(os.path.join(config.root, "data", (symbol + ".csv")))
-    except:
+        assert (os.path.exists(os.path.join(
+            config.root, "data", (symbol + ".csv"))))
+    except AssertionError:
         exec(open(os.path.join(config.root, "data", "get.py")).read())
 
     # Create a data feed.

@@ -11,8 +11,9 @@ end = date(2022, 12, 31)
 for symbol in config.symbols:
     try:
         # Check if the data is already present. If not, download it.
-        os.path.exists(os.path.join(config.root, "data", (symbol + ".csv")))
-    except:
+        assert (os.path.exists(os.path.join(
+            config.root, "data", (symbol + ".csv"))))
+    except AssertionError:
         data = get_history(symbol=symbol, start=start, end=end)
         # Save the data to a csv file.
         data.to_csv(os.path.join(config.root, "data", (symbol + ".csv")))
