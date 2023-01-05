@@ -4,7 +4,6 @@ import backtrader as bt
 import os
 import datetime
 import importlib
-from strategies.SMACrossover import Backtest
 
 parser = argparse.ArgumentParser()
 
@@ -44,8 +43,11 @@ for symbol in args.symbols:
         exec(open(os.path.join(config.root, "data", "get.py")).read())
 
     # Create a data feed.
-    csv = os.path.join(config.root, "data", (symbol + ".csv"))
-    data = bt.feeds.GenericCSVData(dataname=csv,
+    # Ten years worth of data starting from 1-1-2013 and ending on 31-12-2022 is used for backtesting.
+    file = os.path.join(config.root, "data", (symbol + ".csv"))
+    data = bt.feeds.GenericCSVData(dataname=file,
+                                   fromdate=datetime.datetime(2013, 1, 1),
+                                   todate=datetime.datetime(2023, 1, 1),
                                    dtformat=('%Y-%m-%d'),
                                    datetime=0,
                                    high=5,
@@ -63,5 +65,11 @@ for symbol in args.symbols:
     # Specify file to store the results of the backtest.
     cerebro.addwriter(bt.WriterFile, csv=True, out=os.path.join(
         config.root, "backtests", args.name+".csv"))
+
+    # Add analyzers.
+    # TimeReturn is used to calculate the returns of the strategy.
+    cerebro.addanalyzer(bt.analyzers.TimeReturn, _name='timereturn')
+    # SharpeRatio is used to calculate the Sharpe Ratio of the strategy.
+    cerebro.addanalyzer(bt.analyzers.SharpeRatio, _name='sharperatio')
 
     cerebro.run()  # Run the  simulation.
