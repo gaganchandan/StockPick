@@ -1,6 +1,6 @@
 import config
 from nsepy import get_history
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import os
 import pandas as pd
 
@@ -18,12 +18,26 @@ for symbol in config.symbols:
         assert (os.path.exists(file))
         # If the data is present, ensure that it is up to date.
         data = pd.read_csv(file)
+        # Delete columns from data until Date column is reached.
+        while data.columns[0] != "Date":
+            del data[data.columns[0]]
         last_date = datetime.strptime(data.iloc[-1, 0], "%Y-%m-%d").date()
         if last_date < end:
-            latest = get_history(symbol=symbol, start=last_date, end=end)
-            data.concat(latest)
-            print(data[-1])
-            data.to_csv(file)
+            latest = get_history(symbol=symbol, start=(
+                last_date+timedelta(days=1)), end=end)
+            data = pd.concat([data, latest])
+        # Delete columns from data until Date column is reached.
+        while data.columns[0] != "Date":
+            del data[data.columns[0]]
+        data.to_csv(file)
     except AssertionError:  # If the data is not present, download it.
         data = get_history(symbol=symbol, start=start, end=end)
         data.to_csv(file)
+
+# Remove all csv files from the data folder which are not in the symbols list
+# defind in config.py.
+files = os.listdir(os.path.join(config.root, "data"))
+for file in files:
+    if file.endswith(".csv"):
+        if file.strip(".csv") not in config.symbols:
+            os.remove(os.path.join(config.root, "data", file))
