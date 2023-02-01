@@ -2,9 +2,8 @@ import config
 import argparse
 import backtrader as bt
 import os
-import datetime
+from datetime import date, datetime
 import importlib
-from strategies.SMACrossover import Backtest
 
 parser = argparse.ArgumentParser()
 
@@ -23,7 +22,7 @@ parser.add_argument('--symbols', default=config.symbols,
                     nargs='+', choices=config.symbols, help="Symbols to use")
 
 # Take the name of the file in which to store backtest results.
-parser.add_argument('--name', default=datetime.datetime.now().strftime(
+parser.add_argument('--name', default=datetime.now().strftime(
     "%I:%M%p-%B-%d-%Y"), help="Name of output file")
 
 args = parser.parse_args()
@@ -35,17 +34,18 @@ strategy_file = importlib.import_module(
 strategy = getattr(strategy_file, "Backtest")
 
 
-for symbol in args.symbols:
-    # Check if the data has already been downloaded. If not, download it.
-    try:
-        assert (os.path.exists(os.path.join(
-            config.root, "data", (symbol + ".csv"))))
-    except AssertionError:
-        exec(open(os.path.join(config.root, "data", "get.py")).read())
+# Make sure the data is available.
+os.system("python3 " + os.path.join(config.root, "data", "get.py"))
 
+
+for symbol in args.symbols:
     # Create a data feed.
-    csv = os.path.join(config.root, "data", (symbol + ".csv"))
-    data = bt.feeds.GenericCSVData(dataname=csv,
+    # Ten years worth of data starting from 1-1-2013 and ending on 31-12-2022
+    # is used for backtesting.
+    file = os.path.join(config.root, "data", (symbol + ".csv"))
+    data = bt.feeds.GenericCSVData(dataname=file,
+                                   fromdate=date(2013, 1, 1),
+                                   todate=date(2023, 1, 1),
                                    dtformat=('%Y-%m-%d'),
                                    datetime=0,
                                    high=5,
@@ -62,6 +62,12 @@ for symbol in args.symbols:
 
     # Specify file to store the results of the backtest.
     cerebro.addwriter(bt.WriterFile, csv=True, out=os.path.join(
-        config.root, "backtests", args.name+".csv"))
+        config.root, "backtests",  "results", args.name+".csv"))
+
+    # Add analyzers.
+    # TimeReturn is used to calculate the returns of the strategy.
+    cerebro.addanalyzer(bt.analyzers.TimeReturn, _name='timereturn')
+    # SharpeRatio is used to calculate the Sharpe Ratio of the strategy.
+    cerebro.addanalyzer(bt.analyzers.SharpeRatio, _name='sharperatio')
 
     cerebro.run()  # Run the  simulation.
