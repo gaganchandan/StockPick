@@ -17,18 +17,12 @@ for symbol in config.symbols:
         # Check if the data is already present.
         assert (os.path.exists(file))
         # If the data is present, ensure that it is up to date.
-        data = pd.read_csv(file)
-        # Delete columns from data until Date column is reached.
-        while data.columns[0] != "Date":
-            del data[data.columns[0]]
+        data = pd.read_csv(file, index_col=False)
         last_date = datetime.strptime(data.iloc[-1, 0], "%Y-%m-%d").date()
         if last_date < end:
             latest = get_history(symbol=symbol, start=(
                 last_date+timedelta(days=1)), end=end)
             data = pd.concat([data, latest])
-        # Delete columns from data until Date column is reached.
-        while data.columns[0] != "Date":
-            del data[data.columns[0]]
         data.to_csv(file)
     except AssertionError:  # If the data is not present, download it.
         data = get_history(symbol=symbol, start=start, end=end)

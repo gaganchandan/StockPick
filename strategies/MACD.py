@@ -1,5 +1,5 @@
 import backtrader as bt
-import pandas as pd
+import ta
 
 
 class Backtest(bt.Strategy):
@@ -14,3 +14,13 @@ class Backtest(bt.Strategy):
                 self.buy()
             elif self.macd.macd < self.macd.signal:
                 self.close()
+
+
+def scan(data):
+    macd = ta.trend.macd(data['Close'], 20)
+    if macd.iloc[-1] > 0 and macd.iloc[-2] < 0:
+        return 1
+    elif macd.iloc[-1] < 0 and macd.iloc[-2] > 0:
+        return -1
+    else:
+        return 0

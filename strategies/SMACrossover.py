@@ -6,8 +6,8 @@
 # Each strategy file must contain a class called Backtest which is a subclass
 # of backtrader.Strategy. This class is passed to a Cerebro instance created
 # in backtest.py in order to do the backtesting. Each strategy file must also
-# contain a function named scan which takes in recent data and checks if a trade
-# can be taken based on the strategy.
+# contain a function named scan which takes in recent data and checks if a
+# trade can be taken based on the strategy.
 
 
 import backtrader as bt
@@ -39,17 +39,17 @@ class Backtest(bt.Strategy):
 
 # Create a function to scan recent data and check whether a trade can be taken
 # based on this strategy or not.
-def scan(data: pd.DataFrame):
+def scan(data):
     # Calculate SMA using ta library.
     sma1 = ta.trend.sma_indicator(data['Close'], 10)
     sma2 = ta.trend.sma_indicator(data['Close'], 30)
     # Check if the fast moving average crosses the slow moving average to the
     # upside.
-    if sma1[-1] > sma2[-1] and sma1[-2] < sma2[-2]:
+    if sma1.iloc[-1] > sma2.iloc[-1] and sma1.iloc[-2] < sma2.iloc[-2]:
         return 1
     # Check if the fast moving average crosses the slow moving average to the
     # downside.
-    elif sma1[-1] < sma2[-1] and sma1[-2] > sma2[-2]:
+    elif sma1.iloc[-1] < sma2.iloc[-1] and sma1.iloc[-2] > sma2.iloc[-2]:
         return -1
     else:
         return 0

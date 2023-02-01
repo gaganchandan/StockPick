@@ -34,9 +34,11 @@ strategy_file = importlib.import_module(
 strategy = getattr(strategy_file, "Backtest")
 
 
+# Make sure the data is available.
+os.system("python3 " + os.path.join(config.root, "data", "get.py"))
+
+
 for symbol in args.symbols:
-    # Make sure the data is available.
-    os.system("python3 " + os.path.join(config.root, "data", "get.py"))
     # Create a data feed.
     # Ten years worth of data starting from 1-1-2013 and ending on 31-12-2022
     # is used for backtesting.
