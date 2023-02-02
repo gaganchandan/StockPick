@@ -23,10 +23,10 @@ for symbol in config.symbols:
             latest = get_history(symbol=symbol, start=(
                 last_date+timedelta(days=1)), end=end)
             data = pd.concat([data, latest])
-        data.to_csv(file, index=False)
+        data.to_csv(file)
     except AssertionError:  # If the data is not present, download it.
         data = get_history(symbol=symbol, start=start, end=end)
-        data.to_csv(file, index=False)
+        data.to_csv(file)
 
 # Remove all csv files from the data folder which are not in the symbols list
 # defind in config.py.
