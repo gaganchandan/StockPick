@@ -35,3 +35,6 @@ for strategy in strategies:
         if scan(data) == -1:
             calls.append("Close positions of " +
                          file.strip(".csv") + " based on " + strategy)
+
+# Print the calls.
+print(calls)
