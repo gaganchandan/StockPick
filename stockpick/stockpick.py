@@ -9,14 +9,17 @@ import matplotlib.pyplot as plt
 
 # Run get.py to ensure that the latest data is available
 os.system("python3 " + os.path.join(config.root, "data", "get.py"))
-# Generate calls using scan.py
-process = subprocess.Popen(
-    ["python3", os.path.join(config.root, "stockpick", "scan.py")])
-(calls, err) = process.communicate()
-exit_code = process.wait()
 
+
+# Generate calls using scan.py
+def generate_calls():
+    calls = subprocess.run(
+        ["python3", os.path.join(config.root, "stockpick", "scan.py")], capture_output=True, text=True).stdout.strip("\n")
+    return calls
 
 # Function to plot price chart
+
+
 def plot_price_chart():
     symbol = stock.get()
     if symbol not in config.symbols:
@@ -44,22 +47,17 @@ img = ImageTk.PhotoImage(Image.open(os.path.join(
 
 
 canvas.create_image(540, 338, image=img)
+canvas.grid(row=0, column=0, columnspan=6)
+Display = Label(window, text=str(generate_calls()), font=("Arial", 15, "bold"),
+                bg="white", fg="black")
+Display.grid(row=3, column=3)
+
 stock_compute = Button(text="COMPUTE", font=(
     "Arial", 15, "bold"), bg="#7a3530", fg="white", command=plot_price_chart)
 stock = Entry(width=20)
-Display = Label(text="THIS IS A TEST", font=("Arial", 30, "bold"),
-                bg="white", fg="white", width=15, height=15)
-
-canvas.grid(row=0, column=0, columnspan=6)
-
-
 stock.grid(row=1, column=3)
 stock_compute.grid(row=2, column=3)
-Display.grid(row=3, column=3)
-
 window.mainloop()
-
-
 # Button2 = Button(text="Butto", font=("Arial", 20, "bold"), bg="#7a3530", fg="white")
 # Button2.grid(row=1,column=4)
 # canvas.create_text(540,338,text="STOCKS PICKER",font=("Arial",30,"bold"),fill="white")
