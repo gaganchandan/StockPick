@@ -13,9 +13,22 @@ Installation:
 
 Features:
 
-1. `backtest.py`: A command line tool to run backtests quickly and easily. Found under the `backtests` directory.
+1. Provides trade recommendations based on included strategies.
 
-2. `stockpick.py`: Dashboard used for viewing recommended trades and price charts. Found under the `stockpick` directory.
+2. Enables viewing of price charts for selected stocks. 
+
+3. Easily extensible. Simply create and add your strategies to the `strategies` folder and the rest will be taken care of automatically.
+
+4. Uses latest data gathered using `nsepy`. Including new stocks is as easy as adding their names to `config.py`.
+
+5. Effortless and customizable backtesting using `backtrader`.
+
+
+Components:
+
+1. `backtest.py`: A command line tool to run backtests quickly and easily. It is found under the `backtests` directory. For usage information, run `python3 backtest.py -h`. 
+
+2. `stockpick.py`: Dashboard used for viewing recommended trades and price charts. It is found under the `stockpick` directory. 
 
 
 Developed by:
