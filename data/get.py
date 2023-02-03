@@ -18,7 +18,6 @@ for symbol in config.symbols:
         assert (os.path.exists(file))
         # If the data is present, ensure that it is up to date.
         data = pd.read_csv(file, index_col=[0])
-        print(data)
         # last_date = datetime.strptime(data.iloc[-1, 0], "%Y-%m-%d").date()
         last_date = datetime.strptime(data.index[-1], "%Y-%m-%d").date()
         if last_date < end:
