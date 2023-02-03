@@ -4,9 +4,26 @@ StockPick is a platform used for creating, backtesting and implementing custom t
 
 Installation:
 
+1. Clone or download the repository from GitHub.
 
-1.Clone the repository or download it from Github.
+2. Go to the directory `StockPick` and run `pip install -r requirements.txt`.
 
-2. Go to the directory and run `pip3 intall -e .`
+3. Run `pip install -e .`.
 
-3. There is not step 3. It's that simple.
+
+Features:
+
+1. `backtest.py`: A command line tool to run backtests quickly and easily. Found under the `backtests` directory.
+
+2. `stockpick.py`: Dashboard used for viewing recommended trades and price charts. Found under the `stockpick` directory.
+
+
+Developed by:
+
+[Gagan Chandan](https://github.com/gaganchandan)
+
+[Daiwik Bhasker](https://github.com/daiwikR)
+
+[Manish Naik](https://github.com/manishnaik69)
+
+

@@ -1,0 +1,7 @@
+backtrader==1.9.76.123
+matplotlib==3.6.2
+nsepy==0.8
+pandas==1.5.2
+Pillow==9.4.0
+setuptools==65.6.3
+ta==0.10.2
