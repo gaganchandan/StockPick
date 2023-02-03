@@ -61,6 +61,10 @@ for symbol in args.symbols:
     cerebro.addstrategy(strategy)  # Add the trading strategies.
 
     # Specify file to store the results of the backtest.
+    # First make sure that the results directory exists.
+    # If not, create it.
+    if not os.path.exists(os.path.join(config.root, "backtests", "results")):
+        os.makedirs(os.path.join(config.root, "backtests", "results"))
     cerebro.addwriter(bt.WriterFile, csv=True, out=os.path.join(
         config.root, "backtests",  "results", args.name+".csv"))
 

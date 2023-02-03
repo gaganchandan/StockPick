@@ -3,3 +3,4 @@ dist
 stockpick.egg-info
 __pycache__
 data/*.csv
+backtests/results
