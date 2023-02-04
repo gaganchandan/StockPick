@@ -37,6 +37,9 @@ strategy = getattr(strategy_file, "Backtest")
 # Make sure the data is available.
 os.system("python3 " + os.path.join(config.root, "data", "get.py"))
 
+# Ensure that the results direcrory exists.
+if not os.path.exists(os.path.join(config.root, "backtests", "results")):
+    os.makedirs(os.path.join(config.root, "backtests", "results"))
 
 for symbol in args.symbols:
     # Create a data feed.
@@ -56,15 +59,11 @@ for symbol in args.symbols:
 
     # Run the backtest using Cerebro.
     cerebro = bt.Cerebro()  # Create a Cerebro entity.
-    cerebro.broker.setcash(args.capital)  # Set the starting cash.
+    cerebro.broker.setcash(float(args.capital))  # Set the starting cash.
     cerebro.adddata(data)  # Add the data feed.
     cerebro.addstrategy(strategy)  # Add the trading strategies.
 
     # Specify file to store the results of the backtest.
-    # First make sure that the results directory exists.
-    # If not, create it.
-    if not os.path.exists(os.path.join(config.root, "backtests", "results")):
-        os.makedirs(os.path.join(config.root, "backtests", "results"))
     cerebro.addwriter(bt.WriterFile, csv=True, out=os.path.join(
         config.root, "backtests",  "results", args.name+".csv"))
 
